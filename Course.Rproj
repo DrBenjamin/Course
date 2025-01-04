@@ -1,0 +1,18 @@
+Version: 1.0
+ProjectId: 56844b46-3ab2-487a-925f-1dff60141331
+
+RestoreWorkspace: Default
+SaveWorkspace: Default
+AlwaysSaveHistory: Default
+
+EnableCodeIndexing: Yes
+UseSpacesForTab: Yes
+NumSpacesForTab: 2
+Encoding: UTF-8
+
+RnwWeave: Sweave
+LaTeX: pdfLaTeX
+
+PythonType: conda
+PythonVersion: 3.11.10
+PythonPath: ~/miniforge3/envs/template-generator/bin/python3.11
