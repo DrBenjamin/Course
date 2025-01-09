@@ -1,0 +1,232 @@
+---
+title: "Tutorial 1"
+author: "Keith Douglas"
+date: "2024-11-28"
+output: html_document
+---
+
+Welcome to the week 1 exercises! Remember to break down each exercise into smaller bits like we discussed in "Thinking Like a Programmer".
+
+-   Look at the descriptions of what your program needs to do
+-   Work out what code features (which might be broken down into functions) are needed to achieve those things
+-   Put them together to arrive at a solution
+
+For example, here's how you might approach Exercise 1 in 5 steps. After each step remember to run the function tests! The result won't be correct but there is no cost to running your function as many times as you want and seeing how it behaves.
+
+1.  Write a function called `convert_temperature` - it should just be an empty function.
+2.  Add the two arguments to the function definition in the parenthesis (`temperature` and `conversion`)
+3.  In the function body, create an `if` statement that returns a value if the `conversion` argument is "C_to_F".
+4.  Add an `else if` clause to deal with a "F_to_C" conversion.
+5.  Add an `else` statement to return a message if conversion is neither "C_to_F" or "F_to_C"
+
+## Exericse 1: Temperature Conversion
+
+Write a function called `convert_temperature` that takes a numeric value (a temperature) and a string ("C_to_F" or "F_to_C") as arguments.
+
+Convert the temperature from Celsius to Fahrenheit or Fahrenheit to Celsius based on the string input.
+
+Use an if-else statement to handle the two cases.
+
+HINT: C to F formula: `temperature * 9/5 + 32` F to C formula: `(temperature - 32) * 5/9`
+
+```{r exercise-1}
+# Write your function here
+convert_temperature <- function(temp, input_type = 'C_to_F') {
+  if (input_type == 'C_to_F') {
+    return(temp * 9 / 5 + 32)
+  } else if (input_type == 'F_to_C') {
+    return((temp - 32) * 5 / 9)
+  } else {
+    return("Invalid conversion type. Use 'C_to_F' or 'F_to_C'")
+  }
+}
+
+# Test if your function works
+convert_temperature(100, "C_to_F") # 212
+convert_temperature(32, "F_to_C") # 0
+convert_temperature(32, "X_to_Z") # "Invalid conversion type. Use 'C_to_F' or 'F_to_C'"
+```
+
+## Exercise 2: Even or Odd
+
+Write a function called `even_or_odd` that takes a single integer and returns "even" if the number is even and "odd" if the number is odd.
+
+-   Apply this function to a vector of numbers 1:10 using `map_chr()` from `purrr`.
+
+```{r exercise-2}
+# Write your function here
+
+
+# Expected output of map_chr()
+# [1] "odd"  "even" "odd"  "even" "odd"  "even" "odd"  "even" "odd"  "even"
+```
+
+## Exercise 3: Categorise Values Based on Conditions
+
+Create a function `categorise_value` that takes a numeric value and:
+
+-   Returns "low" if the value is less than 50,
+-   "medium" if it’s between 50 and 100, and
+-   "high" if it’s greater than 100.
+
+Apply this function to the vector `c(45, 60, 150, 85, 20)` using `map_chr()`
+
+```{r exercise-3}
+# Write your function here
+
+
+# Expected output of map_chr()
+# [1] "low"    "medium" "high"   "medium" "low" 
+```
+
+## Exercise 4: Word Lengths
+
+Create a vector of words: `c("apple", "banana", "cherry", "date")`
+
+Write a function called `word_length` that returns the length of each word.
+
+Apply this function to the vector using `map_int()`
+
+```{r exercise-4}
+# Write your function here
+
+
+# Expected output of map_int()
+# [1] 5 6 6 4
+```
+
+## Exercise 5: Create a Plotting Function
+
+Write a function called `generate_plot` that creates a scatterplot or a boxplot using the `ggplot2` package. The function should take the following arguments:
+
+1.  `data`: The data frame to be used.
+2.  `x`: The column name for the x-axis variable.
+3.  `y`: The column name for the y-axis variable.
+4.  `plot_type`: A string indicating the type of plot ("scatter" for scatterplot or "box" for boxplot).
+
+The function should:
+
+-   Use `ggplot()` to create the plot.
+-   Return the plot.
+-   Throw an error if an invalid `plot_type` is provided.
+
+HINT: Use `stop()` to handle invalid `plot_type` values
+
+```{r exercise-5}
+# Write your function here
+
+
+
+# Use the mtcars dataset for testing
+generate_plot(mtcars, x = "wt", y = "mpg", plot_type = "scatter") +
+  labs(title = "Miles per Gallon decreases as Weight increases",
+        x = "Weight", 
+        y = "Miles per Gallon"
+      )
+
+generate_plot(mtcars, x = "cyl", y = "mpg", plot_type = "box") +
+    labs(title = "Median mpg is just under 20",
+        x = "No. Cylinders", 
+        y = "Miles per Gallon"
+      )
+```
+
+## Exercise 6: Raindrops
+
+Write a function called `raindrops` that takes a number as an argument and converts it into its corresponding raindrop sound and returns the sound.
+
+If a given number:
+
+-   is divisible by 3, add "Pling" to the result.
+-   is divisible by 5, add "Plang" to the result.
+-   is divisible by 7, add "Plong" to the result.
+-   is not divisible by 3, 5, or 7, the result should be the number as a character.
+
+#### Examples
+
+-   28 is divisible by 7, but not 3 or 5, so the result would be "Plong".
+-   30 is divisible by 3 and 5, but not 7, so the result would be "PlingPlang".
+-   34 is not divisible by 3, 5, or 7, so the result would be "34".
+
+HINT: Checkout the modulo operator in the help under Arithmetic Operators
+
+Attribution: <https://exercism.org/tracks/r/exercises/raindrops>
+
+```{r exercise-6}
+# Problem Decomposition
+
+# Step 1: Write a function called `raindrops` - it should just be an empty function.
+# Step 2: Add the 'number' argument to the function definition in the parenthesis.
+# Step 3: In the function body, create a variable called 'result' and initialise it as an empty character string.
+# Step 4: At the end of the function body, return the 'result' variable. This will be the last statement of the function.
+# Step 5: In the function body, add an 'if' statement that concatenates a 'Pling' to the 'result' variable if it is divisible by 3.
+# Step 6: Add 2 more 'if' statements that concatenate 'Plang' and 'Plong' if the number is divisible by 5 or 7.
+# Step 7: Add one more 'if' statement that returns the number if the result variable is still an empty character string (i.e the number is not divisible by 3, 5, or 7)
+
+# Write your function here
+
+
+
+
+
+# Test if your function works
+raindrops(15) # PlingPlang
+raindrops(5) # Plang
+raindrops(3) # Pling
+raindrops(14) # Plong
+raindrops(8) # 8
+raindrops(105) # PlingPlangPlong
+```
+
+## Exericse 7: Using your Raindrops function
+
+Create a sequence of numbers from 1 to 30.
+
+1.  Write a `for` loop that loops round the sequence of numbers and stores the result of passing each number to your `raindrops` function, in a vector called `raindrop_sounds`.
+
+2.  Using a function from purrr, write an alternative to your `for` loop.
+
+```{r exercise-7}
+# Write your code here
+
+
+# Expected result of raindrop_sounds
+# "1"          "2"          "Pling"      "4"          "Plang"     
+# "Pling"      "Plong"      "8"          "Pling"      "Plang"     
+# "11"         "Pling"      "13"         "Plong"      "PlingPlang"
+# "16"         "17"         "Pling"      "19"         "Plang"     
+# "PlingPlong" "22"         "23"         "Pling"      "Plang"     
+# "26"         "Pling"      "Plong"      "29"         "PlingPlang"
+```
+
+## Exercise 8: Write a Function to Summarise a Column
+
+Write a function called `summarise_variable()` that takes three arguments:
+
+-   `data`: A data frame.
+-   `group_var`: A column to group by.
+-   `summary_var`: A column to summarise.
+
+The function should:
+
+-   Use `group_by()` to group the data by `group_var`.
+-   Calculate the `mean`, `median`, and `standard deviation` of `summary_var` for each group using `summarise()`.
+-   Return a tibble showing the results.
+
+HINT: Use the embracing syntax ({{}}) to allow `group_var` and `summary_var` to be specified without quotation marks.
+
+```{r exercise-8}
+# Write your function here
+
+
+
+# Test the function with mtcars dataset
+summarise_variable(mtcars, group_var = cyl, summary_var = mpg)
+
+# A tibble: 3 × 4
+#     cyl  mean median    sd
+#   <dbl> <dbl>  <dbl> <dbl>
+# 1     4  26.7   26    4.51
+# 2     6  19.7   19.7  1.45
+# 3     8  15.1   15.2  2.56
+```
