@@ -1,0 +1,193 @@
+---
+title: "Tutorial 1"
+author: "Keith Douglas"
+date: "2024-11-28"
+output: html_document
+---
+
+```{r load-libraries}
+library(purrr)
+```
+
+
+## Exercise 1: Temperature Conversion 
+
+```{r exercise-1}
+convert_temperature <- function(temperature, conversion) {
+  if (conversion == "C_to_F") {
+    return(temperature * 9/5 + 32)
+  } else if (conversion == "F_to_C") {
+    return((temperature - 32) * 5/9)
+  } else {
+    return("Invalid conversion type. Use 'C_to_F' or 'F_to_C'")
+  }
+}
+
+convert_temperature(100, "C_to_F") # 212
+convert_temperature(32, "F_to_C") # 0
+convert_temperature(32, "X_to_Z") # "Invalid conversion type. Use 'C_to_F' or 'F_to_C'"
+```
+
+## Exercise 2: Even or Odd
+
+```{r exercise-2}
+even_or_odd <- function(num) {
+  if (num %% 2 == 0) {
+    return("even")
+  } else {
+    return("odd")
+  }
+}
+
+map_chr(1:10, even_or_odd)
+```
+
+## Exericse 3: Categorise Values Based on Conditions
+
+```{r exercise-3}
+categorise_value <- function(x) {
+  if (x < 50) {
+    return("low")
+  } else if (x <= 100) {
+    return("medium")
+  } else {
+    return("high")
+  }
+}
+
+values <- c(45, 60, 150, 85, 20)
+map_chr(values, ~ categorise_value(.x))
+```
+
+## Exercise 4: Word Lengths
+
+```{r exercise-4}
+words <- c("apple", "banana", "cherry", "date")
+
+word_length <- function(word) {
+  nchar(word)
+}
+
+map_int(words, word_length)
+```
+
+
+## Exercise 5: Create a Plotting Function
+
+```{r exercise-5}
+# Load ggplot package
+library(ggplot2)
+
+# Define the function
+generate_plot <- function(data, x, y, plot_type) {
+  # Check for valid plot type
+  if (!plot_type %in% c("scatter", "box")) {
+    stop("Invalid plot_type. Use 'scatter' or 'box'.")
+  }
+  
+  # Create scatterplot
+  if (plot_type == "scatter") {
+    plot <- ggplot(data, aes(x = {{x}}, y = {{y}})) +
+      geom_point()
+  }
+  
+  # Create boxplot
+  if (plot_type == "box") {
+    plot <- ggplot(data, aes(x = {{x}}, y = {{y}})) +
+      geom_boxplot()
+  }
+  
+  return(plot)
+}
+
+generate_plot(mtcars, x = wt, y = mpg, plot_type = "scatter") +
+  labs(title = "Miles per Gallon decreases as Weight increases",
+        x = "Weight", 
+        y = "Miles per Gallon"
+      )
+
+generate_plot(mtcars, x = cyl, y = mpg, plot_type = "box") +
+    labs(title = "Median mpg is just under 20",
+        x = "Weight", 
+        y = "Number of Cylinders"
+      )
+```
+
+
+## Exercise 6: Raindrops
+
+```{r exercise-6}
+raindrops <- function(number) {
+  result <- ""
+  
+  if (number %% 3 == 0) {
+    result <- paste0(result, "Pling")
+  } 
+  if (number %% 5 == 0) {
+    result <- paste0(result, "Plang")
+  } 
+  if (number %% 7 == 0) {
+    result <- paste0(result, "Plong")
+  } 
+  if (result == "") {
+    result <- as.character(number)
+  }
+  
+  return(result)
+}
+
+raindrops(15) # PlingPlang
+raindrops(5) # Plang
+raindrops(3) # Pling
+raindrops(14) # Plong
+raindrops(8) # 8
+raindrops(105) # PlingPlangPlong
+```
+
+## Exericse 7: Using your Raindrops function
+
+```{r exercise-7}
+numbers <- c(1:30)
+
+raindrop_sounds <- c()
+
+# Solution 1
+for(i in numbers) {
+ raindrop_sounds <- c(raindrop_sounds, raindrops(i))
+}
+print(raindrop_sounds)
+
+# Solution 2
+raindrop_sounds <- c()
+raindrop_sounds <- map_chr(numbers, raindrops)
+print(raindrop_sounds)
+```
+
+## Exercise 8: Write a Function to Summarise a Column
+
+
+```{r exercise-8}
+library(tidyverse)
+
+# Define the function
+summarise_variable <- function(data, group_var, summary_var) {
+  data %>%
+    group_by({{group_var}}) %>%  # Embrace the group_var
+    summarise(
+      mean = mean({{summary_var}}, na.rm = TRUE),
+      median = median({{summary_var}}, na.rm = TRUE),
+      sd = sd({{summary_var}}, na.rm = TRUE)
+    ) %>%
+    ungroup()
+}
+
+# Test the function with mtcars dataset
+summarise_variable(mtcars, group_var = cyl, summary_var = mpg)
+
+# A tibble: 3 × 4
+#     cyl  mean median    sd
+#   <dbl> <dbl>  <dbl> <dbl>
+# 1     4  26.7   26    4.51
+# 2     6  19.7   19.7  1.45
+# 3     8  15.1   15.2  2.56
+```
