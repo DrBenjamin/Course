@@ -1,3 +1,5 @@
+# Intermediate R Programming for Data Science 
+# Week 1 
 library(tidyverse)
 
 my_function <- function(arg1, arg2) {
