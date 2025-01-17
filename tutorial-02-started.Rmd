@@ -1,0 +1,207 @@
+---
+title: "Tutorial 02: Intermediate R Programming"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+In this practice document we will be applying some of the core concepts and principles introduced this week into some hands on exercises. These course concepts include **reprex**, **debugging** and using the `{purrr}` package. 
+
+We will need the following packages: 
+
+```{r libraries, message=FALSE}
+library(purrr)
+library(tibble)
+library(dplyr)
+library(reprex)
+```
+
+## Exercise 1
+
+We have a data object called `moons` which has the diameter of the moons of some planets in our solar system. 
+
+How can you get the length of each vector in the list `moons`? This will tell us how many moons the planets Earth, Mars, and Neptune have. 
+
+The output of this should be an integer vector. 
+
+```{r ex-1-data}
+# values represent the diameter of each moon 
+moons <- list(
+  earth = 3474.8,
+  mars = c(22.53, 12.4),
+  neptune = c(150, 60, 42, 2706.8, 62, 340, 18,
+              38, 420, 82, 44, 194, 174.8, 66)
+  )
+```
+
+
+```{r ex-1}
+## Your code here: 
+calc_length <- function(data) {
+  length(data)
+}
+
+map(moons, ~ calc_length(.x))
+
+map(moons, length)
+
+moons |>
+  map(length)
+```
+
+
+## An aside on data types and structures
+
+We discussed briefly this week the difference between `NA` and `NULL` in Topic 1.2. If we wanted to add Venus to our `moons` list, which missing value is most appropriate and accurate? 
+
+Notice that we created `moons` as a list. Can you think of a reason as to why this data may be better represented as a list than as a more traditional data frame or tibble? An answer will be provided after Exercise 3. 
+
+
+## Exercise 2 
+
+Using the same object `moons`, which planet has the smallest median moon radius? 
+
+```{r ex-2}
+# Your code here:
+smallest_moon = function(moon){
+  median(moon)
+}
+
+map(moons, min)
+
+map(moons, smallest_moon)
+
+# this one 
+output <- map(moons, median)
+
+output %>%
+  map(min)
+# want output to be the named vector not the median for each element in the list 
+```
+
+
+## Exercise 3 
+
+At the moment, the values in our list `moon` are in kilometers. Change them to miles using an anonymous function. 
+
+*Hint* To convert km to miles, multiple by 0.62 
+
+```{r ex-3}
+# Your code here: 
+km_to_mi <- function(km){
+  km*0.62
+}
+
+map(moons, km_to_mi)
+
+## ALL anonymous functions, different flavours 
+# purrr syntax style anonymous function 
+map(moons, ~.x*0.62)
+
+# general function 
+map(moons, function(km) km*0.62)
+
+# R syntax style anonymous function 
+map(moons, \(km) km*0.62)
+```
+
+
+## An answer on data types and structures 
+
+We are using `map()` in these exercises to *loop* over a list, and apply a *vectorized* function. This speaks to the change in mind-set required to think in both a functional **and** vectorized way. 
+
+Venus does not have any moons. `NA` returns a length of 1, so the correct missing value here is `NULL`. `NA` is more appropriate when we do not have the data for something, but it does theoretically exist. Here, no moon exists it is not that we are missing the value of the diameter. 
+
+However, I have not added Neptune into our working `moons` object because working with objects of length 0 can cause troubles we do not want to deal with today. If you are interested in exploring this more, add `venus = NULL` in exercise 1 where we create the `moons` list and work through exercises 1 to 3 and see what changes. 
+
+```{r missing-data}
+length(NA) #> 1
+
+length(NULL) #> 0 
+```
+
+Tibbles must have columns (which are vectors) of the same length. Lists on the other hand have no such restriction around the length of elements they contain. Neptune has 14 moons, which would mean a lot of `NA`s for Earth and Mars which only have 1 and 2 moons, respectively. 
+
+Lets explore this... 
+
+## Exercise 4 
+
+Run the following code and read the error message. We already know what is wrong here, but try and understand how the error message is communicating this to you. 
+
+```{r ex-4-error}
+moons_df <- tibble(
+  venus = NULL,
+  earth = 3474.8,
+  mars = c(22.53, 12.4),
+  neptune = c(150, 60, 42, 2706.8, 62, 340, 18,
+              38, 420, 82, 44, 194, 174.8, 66)
+  )
+```
+
+
+## Exercise 5
+
+The following code uses `map` nested inside another `map` to apply a function to every element of a nested list. Why does it fail, and what do you need to do to make it work? 
+
+Use debugging tools such as reading the error message, traceback, and/or the interactive debugger to help you answer these questions. 
+
+```{r ex-5-data}
+ex_list <- list(
+  list(1, c(3, 9)),
+  list(c(3, 6),  7, c(4, 7, 6))
+)
+
+str(ex_list)
+
+```
+
+```{r ex-5-error}
+triple <- function(x) x * 3 
+
+map(ex_list, map, .f = triple)
+#> Error in `map()`:
+#> ℹ In index: 1.
+#> Caused by error in `.f()`:
+#> ! unused argument (function (.x, .f, ..., .progress = FALSE) 
+#> {
+#>    map_("list", .x, .f, ..., .progress = .progress)
+#> })
+```
+
+
+## Exercise 6 
+
+Look up the documentation for `purrr::map2()`. Read the help files to understand the arguments and what the function does. Perhaps even try out some of the examples at the bottom of the help file. 
+
+Then apply this function to do the follow task: 
+
+Imagine we have some data on the number of different fruit that you ate each day across a week. Create a new column in `fruits_num` called `total_fruit` which is the sum of each row in columns `apples` and `bananas`. 
+
+**Hint** What function from `{dpylr}` do we use to "create, modify and delete columns"?  
+
+**Hint 2** Remember, tibble columns are vectors
+
+**Hint 3** Think about what output data structure you would like, is it a list? Or a vector of a specific data type? 
+
+```{r ex-6-data}
+fruits_num <- tibble(
+  # create days of the week 
+  # if you are not sure what the arguments to ISOdate() are, look up the documentation! 
+  days = weekdays(ISOdate(1, 1, 1:7)),
+  apples = c(1, 2, 4, 6, 2, 1, 8),
+  bananas = c(6, 5, 3, 2, 1, 9, 4)
+  )
+```
+
+
+```{r ex-6}
+## Your code here 
+
+```
+
+
+## Exercise 7
+
+Create a reprex of your solution to Exercise 6 and post it on the dedicated discussion board in the week 2 folder. This is an exciting step, your (likely) first reprex!  
+
+*Hint:* Use the `{reprex}` package to ensure your solution is a reprex. See week 2 Topic 3.5 in the course content. 
+
