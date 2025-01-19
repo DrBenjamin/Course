@@ -30,7 +30,7 @@ moons <- list(
   mars = c(22.53, 12.4),
   neptune = c(150, 60, 42, 2706.8, 62, 340, 18,
               38, 420, 82, 44, 194, 174.8, 66)
-  )
+)
 ```
 
 ### Solution 
@@ -38,16 +38,15 @@ moons <- list(
 We cannot just do `length(moons)` as this returns the number of elements in the list (AKA the number of planets). We need to use `map` to iterate through the vectors in the list and get the length of each element. 
 
 ```{r ex-1-solution}
-# does not give us the answer we are looking for 
+# does not give us the answer we are looking for
 length(moons)
 
-# we get 4 because there are 4 elements in our list! 
-# using map does give us what we are looking for 
+# we get 4 because there are 4 elements in our list!
+# using map does give us what we are looking for
 moons |>
-  map(length) # outputs a list 
+  map(length) # outputs a list
 
 # to get an integer vector we need to use map_int
-
 moons |>
   map_int(length)
 ```
@@ -58,13 +57,11 @@ We could also use another function `lengths()` which is a bit of a game changer,
 lengths(moons)
 ```
 
-
 ## An aside on data types and structures
 
 We discussed briefly this week the difference between `NA` and `NULL` in Topic 1.2. If we wanted to add Venus to our `moons`list, which missing value is most appropriate and accurate? 
 
 Notice that we created `moons` as a list. Can you think of a reason as to why this data may be better represented as a list than as a more traditional data frame or tibble? An answer will be provided after Exercise 3. 
-
 
 ## Exercise 2 
 
@@ -90,8 +87,8 @@ At the moment, the values in our list `moon` are in kilometers. Change them to m
 This is an ideal use case for an anonymous function, as after we do the conversion, it is unlikely we will need the function again. 
 
 ```{r ex-3-solution}
-moons_mi <- moons |> 
-  map(\(value) value*0.62)
+moons_mi <- moons |>
+  map(\(value) value * 0.62)
 
 moons_mi
 ```
@@ -107,7 +104,7 @@ However, I have not added Neptune into our working `moons` object because workin
 ```{r missing-data}
 length(NA) #> 1
 
-length(NULL) #> 0 
+length(NULL) #> 0
 ```
 
 Tibbles must have columns (which are vectors) of the same length. Lists on the other hand have no such restriction around the length of elements they contain. Neptune has 14 moons, which would mean a lot of `NA`s for Earth and Mars which only have 1 and 2 moons, respectively. 
@@ -125,7 +122,7 @@ moons_df <- tibble(
   mars = c(22.53, 12.4),
   neptune = c(150, 60, 42, 2706.8, 62, 340, 18,
               38, 420, 82, 44, 194, 174.8, 66)
-  )
+)
 ```
 
 ### Solution 
@@ -142,13 +139,13 @@ An interesting note here is that `"ℹ Only values of size one are recycled."`
 So if we run the code from above with only Earth and Neptune, we actually do not get an error! However... the result may not be what you were anticipating. The **key point** here is that it is important to always check your objects after applying some function to them, to ensure the result is what you expected. The most difficult errors to catch are the silent ones that execute, just not doing what you wanted. 
 
 ```{r ex-4-solution}
-moons_en_df <- tibble(  
+moons_en_df <- tibble(
   venus = NULL,
   earth = 3474.8,
   #mars = c(22.53, 12.4),
   neptune = c(150, 60, 42, 2706.8, 62, 340, 18,
               38, 420, 82, 44, 194, 174.8, 66)
-  )
+)
 
 dplyr::glimpse(moons_en_df)
 ```
@@ -169,13 +166,13 @@ str(ex_list)
 ```
 
 ```{r ex-5-error}
-triple <- function(x) x * 3 
+triple <- function(x) x * 3
 
 map(ex_list, map, .f = triple)
 #> Error in `map()`:
 #> ℹ In index: 1.
 #> Caused by error in `.f()`:
-#> ! unused argument (function (.x, .f, ..., .progress = FALSE) 
+#> ! unused argument (function (.x, .f, ..., .progress = FALSE)
 #> {
 #>    map_("list", .x, .f, ..., .progress = .progress)
 #> })
@@ -188,10 +185,10 @@ This function call fails, because `triple()` is specified as the `.f` argument a
 There are at least 2 ways you can solve this:
 
 ```{r ex-5-solution}
-## Option 1: do not name the argument 
+## Option 1: do not name the argument
 map(ex_list, map, triple)
 
-## Option 2: Use anonymous functions! 
+## Option 2: Use anonymous functions!
 map(ex_list, \(x) map(x, triple))
 ```
 
@@ -213,12 +210,12 @@ Imagine we have some data on the number of different fruit that you ate each day
 
 ```{r ex-6-data}
 fruits_num <- tibble(
-  # create days of the week 
+  # create days of the week
   # if you are not sure what the arguments to ISOdate() are, look up the documentation! 
   days = weekdays(ISOdate(1, 1, 1:7)),
   apples = c(1, 2, 4, 6, 2, 1, 8),
   bananas = c(6, 5, 3, 2, 1, 9, 4)
-  )
+)
 ```
 
 ### Solution 
@@ -230,12 +227,12 @@ Because tibble columns are vectors, so we can use `map2()` inside `mutate()` to 
 fruits_num |>
   mutate(total_fruit = map2_dbl(.x = apples,
                                 .y = bananas,
-                                .f = sum)) 
+                                .f = sum))
 
-# Option 2 with anonymous function 
+# Option 2 with anonymous function
 fruits_num |>
-  mutate(total_fruit = map2_dbl(.x = apples, 
-                                .y = bananas, 
+  mutate(total_fruit = map2_dbl(.x = apples,
+                                .y = bananas,
                                 .f = \(x, y) x + y))
 ```
 
@@ -245,7 +242,7 @@ If we used `map2` we would end up with a list-column for the sum, rather than a 
 fruits_num |>
   mutate(total_fruit = map2(.x = apples,
                             .y = bananas,
-                            .f = sum)) 
+                            .f = sum))
 ```
 
 This is not necessarily incorrect, but is unlikely to be what you were wanting as output and complicates any handling of the tibble in downstream analysis. 
