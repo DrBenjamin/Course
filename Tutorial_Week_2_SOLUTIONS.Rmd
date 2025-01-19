@@ -33,13 +33,6 @@ moons <- list(
   )
 ```
 
-
-```{r ex-1}
-## Your code here: 
-
-
-```
-
 ### Solution 
 
 We cannot just do `length(moons)` as this returns the number of elements in the list (AKA the number of planets). We need to use `map` to iterate through the vectors in the list and get the length of each element. 
@@ -49,7 +42,6 @@ We cannot just do `length(moons)` as this returns the number of elements in the 
 length(moons)
 
 # we get 4 because there are 4 elements in our list! 
-
 # using map does give us what we are looking for 
 moons |>
   map(length) # outputs a list 
@@ -58,15 +50,12 @@ moons |>
 
 moons |>
   map_int(length)
-
 ```
 
 We could also use another function `lengths()` which is a bit of a game changer, it gives "the length of each element of a list or atomic vector as an integer or numeric vector" (check the documentation for more.)
 
 ```{r ex-1-lengths}
-
 lengths(moons)
-
 ```
 
 
@@ -80,12 +69,6 @@ Notice that we created `moons` as a list. Can you think of a reason as to why th
 ## Exercise 2 
 
 Using the same object `moons`, which planet has the smallest median moon radius? 
-
-```{r ex-2}
-# Your code here:
-
-```
-
 
 ### Solution 
 
@@ -101,12 +84,6 @@ moons |>
 At the moment, the values in our list `moon` are in kilometers. Change them to miles using an anonymous function. 
 
 *Hint* To convert km to miles, multiple by 0.62 
-
-```{r ex-3}
-# Your code here: 
-
-```
-
 
 ### Solution 
 
@@ -189,7 +166,6 @@ ex_list <- list(
 )
 
 str(ex_list)
-
 ```
 
 ```{r ex-5-error}
@@ -245,13 +221,6 @@ fruits_num <- tibble(
   )
 ```
 
-
-```{r ex-6}
-## Your code here 
-
-```
-
-
 ### Solution 
 
 Because tibble columns are vectors, so we can use `map2()` inside `mutate()` to alter tibble columns!
@@ -289,4 +258,4 @@ Create a reprex of your solution to Exercise 6 and post it on the dedicated disc
 
 ### Solutions 
 
- See `tutorial-02-EX-7.R` and solutions video 
+ See `Tutorial-Week_2_EX_7.R` and solutions video 
