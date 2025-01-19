@@ -48,13 +48,11 @@ moons |>
   map(length)
 ```
 
-
 ## An aside on data types and structures
 
 We discussed briefly this week the difference between `NA` and `NULL` in Topic 1.2. If we wanted to add Venus to our `moons` list, which missing value is most appropriate and accurate? 
 
 Notice that we created `moons` as a list. Can you think of a reason as to why this data may be better represented as a list than as a more traditional data frame or tibble? An answer will be provided after Exercise 3. 
-
 
 ## Exercise 2 
 
@@ -77,7 +75,6 @@ output %>%
   map(min)
 # want output to be the named vector not the median for each element in the list 
 ```
-
 
 ## Exercise 3 
 
