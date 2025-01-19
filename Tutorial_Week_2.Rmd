@@ -24,18 +24,18 @@ How can you get the length of each vector in the list `moons`? This will tell us
 The output of this should be an integer vector. 
 
 ```{r ex-1-data}
-# values represent the diameter of each moon 
+# values represent the diameter of each moon
 moons <- list(
   earth = 3474.8,
   mars = c(22.53, 12.4),
   neptune = c(150, 60, 42, 2706.8, 62, 340, 18,
               38, 420, 82, 44, 194, 174.8, 66)
-  )
+)
 ```
 
 
 ```{r ex-1}
-## Your code here: 
+## Your code here:
 calc_length <- function(data) {
   length(data)
 }
@@ -60,7 +60,7 @@ Using the same object `moons`, which planet has the smallest median moon radius?
 
 ```{r ex-2}
 # Your code here:
-smallest_moon = function(moon){
+smallest_moon = function(moon) {
   median(moon)
 }
 
@@ -68,12 +68,12 @@ map(moons, min)
 
 map(moons, smallest_moon)
 
-# this one 
+# this one
 output <- map(moons, median)
 
 output %>%
   map(min)
-# want output to be the named vector not the median for each element in the list 
+# want output to be the named vector not the median for each element in the list
 ```
 
 ## Exercise 3 
@@ -83,22 +83,22 @@ At the moment, the values in our list `moon` are in kilometers. Change them to m
 *Hint* To convert km to miles, multiple by 0.62 
 
 ```{r ex-3}
-# Your code here: 
+# Your code here:
 km_to_mi <- function(km){
-  km*0.62
+  km * 0.62
 }
 
 map(moons, km_to_mi)
 
 ## ALL anonymous functions, different flavours 
 # purrr syntax style anonymous function 
-map(moons, ~.x*0.62)
+map(moons, ~.x * 0.62)
 
 # general function 
-map(moons, function(km) km*0.62)
+map(moons, function(km) km * 0.62)
 
 # R syntax style anonymous function 
-map(moons, \(km) km*0.62)
+map(moons, \(km) km * 0.62)
 ```
 
 
@@ -113,7 +113,7 @@ However, I have not added Neptune into our working `moons` object because workin
 ```{r missing-data}
 length(NA) #> 1
 
-length(NULL) #> 0 
+length(NULL) #> 0
 ```
 
 Tibbles must have columns (which are vectors) of the same length. Lists on the other hand have no such restriction around the length of elements they contain. Neptune has 14 moons, which would mean a lot of `NA`s for Earth and Mars which only have 1 and 2 moons, respectively. 
@@ -131,7 +131,7 @@ moons_df <- tibble(
   mars = c(22.53, 12.4),
   neptune = c(150, 60, 42, 2706.8, 62, 340, 18,
               38, 420, 82, 44, 194, 174.8, 66)
-  )
+)
 ```
 
 
@@ -148,7 +148,6 @@ ex_list <- list(
 )
 
 str(ex_list)
-
 ```
 
 ```{r ex-5-error}
@@ -181,18 +180,17 @@ Imagine we have some data on the number of different fruit that you ate each day
 
 ```{r ex-6-data}
 fruits_num <- tibble(
-  # create days of the week 
-  # if you are not sure what the arguments to ISOdate() are, look up the documentation! 
+  # create days of the week
+  # if you are not sure what the arguments to ISOdate() are, look up the documentation!
   days = weekdays(ISOdate(1, 1, 1:7)),
   apples = c(1, 2, 4, 6, 2, 1, 8),
   bananas = c(6, 5, 3, 2, 1, 9, 4)
-  )
+)
 ```
 
 
 ```{r ex-6}
-## Your code here 
-
+## Your code here
 ```
 
 
