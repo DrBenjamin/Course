@@ -1,5 +1,4 @@
 Version: 1.0
-ProjectId: 56844b46-3ab2-487a-925f-1dff60141331
 
 RestoreWorkspace: Default
 SaveWorkspace: Default
@@ -14,5 +13,5 @@ RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
 PythonType: conda
-PythonVersion: 3.11.10
-PythonPath: ~/miniforge3/envs/template-generator/bin/python3.11
+PythonVersion: 3.11.11
+PythonPath: ~/miniforge3/envs/dateiablage/bin/python3.11

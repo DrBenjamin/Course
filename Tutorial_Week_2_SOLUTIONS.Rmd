@@ -54,7 +54,9 @@ moons |>
 We could also use another function `lengths()` which is a bit of a game changer, it gives "the length of each element of a list or atomic vector as an integer or numeric vector" (check the documentation for more.)
 
 ```{r ex-1-lengths}
-lengths(moons)
+#lengths(moons)
+moons %>%
+  lengths()
 ```
 
 ## An aside on data types and structures
