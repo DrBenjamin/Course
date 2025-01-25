@@ -6,7 +6,6 @@ format: html
 ```{r}
 #| label: setup
 #| include: false
-
 knitr:::opts_chunk$set(include = FALSE)
 
 library(dplyr)
@@ -14,7 +13,6 @@ library(tidyr)
 library(purrr)
 library(ggplot2)
 library(httr2)
-
 ```
 
 ## Create API request
@@ -23,10 +21,10 @@ library(httr2)
 
 ```{r}
 #| label: set-api-parameters
-
-base_url <- 'https://lforms-fhir.nlm.nih.gov/baseR4'
-resource <- 'Patient'
-patient_id <- 'pat-106'
+base_url <- "https://lforms-fhir.nlm.nih.gov"
+path <- "baseR4"
+resource <- "Patient"
+patient_id <- "pat-106"
 ```
 
 You can a different patient ID.
@@ -53,21 +51,17 @@ You will need to insert the API parameters above into the correct functions belo
 
 # ---- Ex 1.1 ----
 # Fill in the function arguments. Use the help files, and discuss.
-
-req_patient <- request() |>
-  req_url_path_append() |>
-  req_headers(Accept = 'application/fhir+json')
+req_patient <- request(base_url = base_url) |>
+  req_url_path_append(path, resource, patient_id) |>
+  req_headers(Accept = "application/fhir+json")
 # Discuss the meaning of the final line above
 
 
 # ---- Ex 1.2 ----
 # Insert your request into the `dry_run()` function, and run it
-
-req_dry_run()
+req_dry_run(req_patient)
 
 # Examine the printed information - see if you can identify all the components of your request.
-
-
 ```
 
 
@@ -80,12 +74,10 @@ If the code runs without error, examine the response object, and locate the __st
 
 ```{r}
 #| label: run-query
-
+resp_patient <- req_perform(req_patient)
 # ---- Ex 1.3 ----
 # Run query here see `req_perform()` and check response status.
 # Perform the rquest and assign the value to a variable called `resp_patient`.
-
-
 ```
 
 ### Examine response body
@@ -102,12 +94,12 @@ We accomplish the conversion using `resp_body_json()`.
 # ---- Ex 1.4 ----
 # To convert your response object from above
 # use the function resp_body_json() here
-
+resp_body_json(resp_patient)
 
 
 
 # Remember to store the result in a variable
-
+resp_body <- resp_body_json(resp_patient)
 ```
 
 
@@ -125,8 +117,6 @@ We can then refer to the variables as needed throughout.
 # Ex 2.0
 # Find the patient's surname (i.e. their "family" name)
 # Assign it to a variable called `family_name`
-
-
 ```
 
 Use the example above as a template to explore other features of the  data.
@@ -146,10 +136,6 @@ You could then store that function in a script you sourced for every FHIR patien
 
 # Ex 2.2
 # Paste their names together and assign to a variable called `patient_name`
-
-
-
-
 ```
 
 
@@ -168,10 +154,6 @@ You could then store that function in a script you sourced for every FHIR patien
 # I.e. subtract from the current year
 # Note that although this is correct for calculating their age,
 # the patient was born in the future, so this is actually "years til birth"
-
-
-
-
 ```
 
 
@@ -181,9 +163,6 @@ You could then store that function in a script you sourced for every FHIR patien
 # Ex 4.1
 ## The patient's address is stored line by line, but also in an element called `$text$div
 # Extract it from the `div` element, and save it in a variable called `patient_address
-
-
-
 ```
 
 **************************************************
@@ -211,7 +190,6 @@ __Address:__ `r patient_address`
 # The `HTML()` function will mark the text as HTML for RMarkdown
 
 htmltools::HTML(resp_list$text$div)
-
 ```
 
 
