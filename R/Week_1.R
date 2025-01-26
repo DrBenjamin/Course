@@ -53,5 +53,4 @@ generate_age_vector <- function(n_minors, n_adults, n_seniors) {
   age_vector <- c(minors, adults, seniors)
   return(age_vector)
 }
-
 generate_age_vector(20, 50, 30)

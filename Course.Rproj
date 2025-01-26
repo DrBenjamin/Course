@@ -1,8 +1,8 @@
 Version: 1.0
-ProjectId: 627813e1-6287-43e7-ad55-30e9865cd044
+ProjectId: 7cc27514-b7f3-4b67-a3b0-90f180e55fa3
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
+RestoreWorkspace: No
+SaveWorkspace: No
 AlwaysSaveHistory: Default
 
 EnableCodeIndexing: Yes
@@ -13,6 +13,11 @@ Encoding: UTF-8
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
-PythonType: conda
-PythonVersion: 3.11.11
-PythonPath: ~/miniforge3/envs/dateiablage/bin/python3.11
+AutoAppendNewline: Yes
+StripTrailingWhitespace: Yes
+LineEndingConversion: Posix
+
+BuildType: Package
+PackageUseDevtools: Yes
+PackageInstallArgs: --no-multiarch --with-keep.source
+PackageRoxygenize: rd,collate,namespace

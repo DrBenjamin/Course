@@ -207,14 +207,15 @@ body_json <- resp_body_json(resp_p106, SimplifyVector = TRUE)
 # More useful search
 library(httr2)
 
-# I'm naming is "saved" here so there is no confusion in out mind over what is a saved object, and what is a request.
+# I'm naming it "saved" here,
+# so there is no confusion in out mind over what is a saved object,
+# and what is a request.
 # You can call it whatever you like
 pat_106_saved <- readRDS(here("data_raw", "resp_p106.RDS"))
 
 base_url <- "https://lforms-fhir.nlm.nih.gov"
 path <- "baseR4"
 resource <- "Patient"
-# patient_id <- 'pat-106'
 given_name <- "Jian"
 surname <- "McIntosh"
 
