@@ -1,0 +1,262 @@
+---
+title: "Patient report - SAMPLE SOLUTIONS"
+format: html
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr:::opts_chunk$set(include = FALSE)
+
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(ggplot2)
+library(httr2)
+```
+
+## Create API request
+
+### Set API endpoints
+
+```{r}
+#| label: set-api-parameters
+base_url <- "https://lforms-fhir.nlm.nih.gov/baseR4"
+resource <- "Patient"
+patient_id <- "pat-106"
+```
+
+You can try any other patient ID.
+Here's the same list provided elsewhere in Learn.
+
+- pat-106
+- pat-2338
+- pat-2374
+- pat-3688
+- pat-6487
+- pat-6568
+- pat-12424
+- pat-14093
+- pat-15592
+- pat-19357
+- pat-23299
+- pat-23425
+- smart-1032702
+- smart-1081332
+- smart-1098667
+- smart-1134281
+
+
+### Patient request
+
+Build up the `{httr2}` request object.
+You will need to insert the API parameters above into the correct functions below.
+
+```{r}
+#| label: build-GET-request
+#| eval: true
+#| include: false
+
+# ---- Ex 1.1 ----
+# Fill in the function arguments. Use the help files, and discuss.
+
+req_patient <- request(base_url) |>
+    req_url_path_append(resource, patient_id) |>
+    req_headers(Accept = "application/fhir+json")
+
+
+# ---- Ex 1.2 ----
+# Insert your request into the `dry_run()` function, and run it
+
+req_dry_run(req_patient)
+
+# Examine the printed information - see if you can identify all the components of your request.
+```
+
+
+### Send the query, and explore the result
+
+Use `req_perform()` to send your query from above to the servers.
+Remember to assign the return value to a variable.
+If the code runs without error, examine the response object, and locate the __status code__ - or access it directly using `$` and the name `status_code` - it should be __200__.
+
+```{r}
+#| label: run-query
+
+# ---- Ex 1.3 ----
+# Run query here see `req_perform()` and check response status.
+# Perform the request and assign the value to a variable called `resp_patient`.
+
+resp_patient <- req_perform(req_patient)
+
+resp_patient
+```
+
+### Examine response body
+
+Because our GET request header specified that we were ready to 'Accept' a JSON encoded response, the server should respond with a body in JSON format.
+However, if we examine the response we see what looks like a long sequence of hexadecimal numbers
+This is our data in raw byte format - this is done mainly for efficiency reasons.
+When converted from this raw byte format (often encoded in UTF-8), it will become a readable JSON string.
+We accomplish the conversion using `resp_body_json()`.
+
+```{r}
+#| label: convert-response-to-json
+
+# ---- Ex 1.4 ----
+# To convert your response object from above
+# use the function resp_body_json() here
+
+patient_list <- resp_body_json(resp_patient)
+
+
+# Remember to store the result in a variable
+
+## NB: We can also use `simplifyVector = TRUE`
+## Here I have chosen to keep the default for extra practice with indexing into lists
+patient_parsed <- resp_body_json(resp_patient, simplifyVector = TRUE)
+```
+
+```{r}
+# Note that the address is a dataframe
+patient_parsed$address
+```
+
+## Extracting specific details
+
+We will extract all the details we need for our report at the start of our document.
+
+We can then refer to the variables as needed throughout.
+
+```{r}
+#| label: extract-name-info-1
+
+# From your "converted data" object (last chunk)...
+
+# Ex 2.0
+# Find the patient's surname (i.e. their "family" name)
+# Assign it to a variable called `family_name`
+
+family_name <- patient_list$name[[1]]$family
+```
+
+Use the example above as a template to explore other features of the  data.
+You could also consider writing a "getter" function for extracting each individual component of the data.
+For example, you could write a function called `get_family()` that simply accessed the family name.
+You could then store that function in a script you sourced for every FHIR patient you analysed.
+
+```{r}
+#| label: extract-name-info-2
+
+# Ex 2.1
+# Find their first name (i.e. their "given" name)
+# Assign it to a variable called `first_name`
+
+first_name <- patient_list$name[[1]]$given[[1]]
+
+
+
+# Ex 2.2
+# Paste their names together and assign to a variable called `patient_name`
+
+patient_name <- paste(family_name, first_name, sep = ", ")
+```
+
+
+```{r}
+#| label: compute-patient-age
+
+# Ex 3.1
+# Find their birth date
+# Assign it to a variable called `birth_date`
+
+birth_date <- patient_list$birthDate
+
+
+# Ex 3.2
+# Use the appropriate R functions to calculate their age
+# I.e. subtract from the current year
+# Note that although this is correct for calculating their age,
+# the patient was born in the future, so this is actually "years til birth"
+
+patient_age <- 2024 - as.integer(patient_list$birthDate)
+```
+
+
+```{r}
+#| label: patient-address
+
+# Ex 4.1
+## The patient's address is stored line by line, but also in an element called `$text$div
+# Extract it from the `div` element, and save it in a variable called `patient_address
+
+patient_address <- patient_list$text$div
+```
+
+**************************************************
+
+<!-- ############################################# -->
+<!-- REPORT STARTS HERE -->
+<!-- Render the document, and scroll to the bottom -->
+<!-- ############################################# -->
+
+## Patient Report
+
+__Name:__ `r patient_name`  
+__Age:__ `r patient_age`  
+
+__Address:__ `r patient_address`
+
+
+## Address from `$div` element
+
+
+```{r}
+#| label: pre-formatted-text
+#| include: true
+
+# The `HTML()` function will mark the text as HTML for RMarkdown
+
+htmltools::HTML(patient_address)
+```
+
+
+## Some medical info
+
+Follow the above and insert some simple information from one of the other FHIR resources, `Observation`, `Encounter`, or `MedicationRequest`.
+This will require a new API request.
+
+This is where things get tricky without an in depth knowledge of FHIR.
+Not all of the following have information in all of the resources (I don't think?).
+
+- pat-106
+- pat-2338
+- pat-2374
+- pat-3688
+- smart-1032702
+- smart-1081332
+- smart-1098667
+- smart-1134281
+
+__Patient resource__
+
+They all will work with as this resource type using `...path_append('Patient', id)`
+
+__Encounter resource__
+
+They can all be found with using `req_url_query(subject = id)`
+
+__Observation resource__
+
+They can all be found with using `req_url_query(subject = id)`
+
+__MedicationRequest resource__
+
+Only the IDs beginning with `smart` can be found using `req_url_query(patient = id)`
+
+
+## For bonus points 
+
+...see if you can create a table of several observations, encounters, or medication requests.
+
+A nice "cheat" method for doing this is to include `simplifyVector = TRUE` in the call to `resp_json_body()`

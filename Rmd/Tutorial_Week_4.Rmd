@@ -1,0 +1,133 @@
+---
+title: "R Notebook"
+---
+
+## Scenario
+
+
+The data here are used by an app that enables clinicians to monitor their patients' medication prescriptions.
+
+There is a __"narrative"__ field that contains formatted text that is ready for display in a browser.
+There are some concerns of problematic entries in the narrative field that are causing confusion for the clinicians - it should match the __"coding_display"__ field, but dos not in all cases.
+
+
+**************************************************
+
+
+## Brief
+
+Being somewhat knowledgeable about the FHIR API, and having some decent R skills, it has fallen to you to investigate the issue.  
+You will have to  
+
+- identify the problematic entries
+- fix any issues
+- identify the patients by name, to allow the clinicians to contact any patients they think might be adversely affected.
+
+You have access to the following two data frames (you will have to adjust the path as necessary).
+
+```{r}
+library(dplyr)
+library(purrr)
+library(stringr)
+library(httr2)
+
+# Might need to adjust path depending on where you're running it from
+load('week-04-tutorial.RData')
+# Loads two dataframes
+# - smart_patients
+# - smart_requests (i.e med requests)
+```
+
+The __narrative__ field is in the `text_div` column in the `smart_requests` dataframe.
+
+Example of narrative field  
+`<div html stuff>  MEDICATION DETAILS [rxnorm 123456]  </div>`  
+
+The text contained in the narrative column is an __HTML formatted string__ that is displayed by the app, to the clinician.
+
+
+The narrative text is automatically populated with the information contained in the `coding_display` column.
+Therefore, the text in the `text_div` and `coding_display` columns should match.
+
+
+**************************************************
+
+
+## Primer on html tags
+
+HTML formatting consists of paired tags - an opening tag, and a closing tag.
+
+Tags themselves are indicated by opening and closing angle brackets `<tag>` (opening) or `</tag>` (closing, indicated by the `/`).
+The tag found in the narrative column is called `<div>`.
+
+All content found __between the opening and closing tags__ is the patients' medication information, e.g.  
+`<div html stuff>  MEDICATION DETAILS [rxnorm 123456]  </div>`  
+The rxnorm code should also be excluded, so in the above example only "MEDICATION DETAILS" should be extracted.
+
+
+**************************************************
+
+
+## The task
+
+The steps required to complete the task are as follows
+
+1. Text consistency validation
+    1. __Write a test__ that will pass when supplied two text vectors that match - i.e. the narrative, and the display columns
+    1. __Process the narrative div__ to match display field by removing the HTML tags.
+    1. The `[rxnorm 123456]` component is not needed and should also be __removed__.
+    1. Identify the records with non-matching entries in the narrative field.
+
+1. Identify any affected patients.
+    1. __Write a test__ that ensures patient IDs conform to the pattern `"smart-..."`.
+    1. __Extract or replace__ any suspected typos.
+    1. __Join__ with the __patient info data__ to get the names and adresses of the affected patients.
+
+
+## Write test
+
+Write a test that will compare two string vectors and return `TRUE` if they all match and `FALSE` otherwise.
+Whether you want to use `testthat` or not is up to you.
+
+```{r}
+
+```
+
+
+## Extract medication text from div
+
+Use any of the string processing methods discussed on the course this week as required to __extract medication text from div__.
+Place the processed result in a new column for easy inspection.
+
+```{r}
+smart_requests |> 
+  mutate(______ = ______,
+         ...... = ??????)
+```
+
+
+#### Apply test
+
+Use your test to confirm all records now match.
+You can copy it, and supply the necessary columns as inputs in any way you like.
+You may have to examine the results and iterate.
+
+```{r}
+
+```
+
+
+## Filter for only the affected patients
+
+```{r}
+smart_requests |> 
+  filter(______)
+```
+
+## Join with the patient data
+
+```{r}
+smart_patients |> 
+  ***_join(_______)
+```
+
