@@ -61,8 +61,8 @@ You will need to insert the API parameters above into the correct functions belo
 # Fill in the function arguments. Use the help files, and discuss.
 
 req_patient <- request(base_url) |>
-    req_url_path_append(resource, patient_id) |>
-    req_headers(Accept = "application/fhir+json")
+  req_url_path_append(resource, patient_id) |>
+  req_headers(Accept = "application/fhir+json")
 
 
 # ---- Ex 1.2 ----

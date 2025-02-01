@@ -50,7 +50,7 @@ str_detect(raindrops, "pl.ng")
 
 str_detect(sentences, "(?i)the") # case insensitive matching
 
-# Alternatvies
+# Alternatives
 ?str_split() # splits a string into several
 ?str_sub() # extracts a substring based on position
 split_by_spaces <- str_split(sentences, " ")
@@ -238,7 +238,7 @@ patient_record(
 stopifnot(
   # add meaningful error message
   "Birth year is outside of 1924-2023 range" =
-  # define range, you can do this in an object as well
+    # define range, you can do this in an object as well
     birthdate >= as.Date(1924 - 01 - 01),
   birthdate <= as.Date(2023 - 01 - 01) # nolint
 ) |>
